@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80" fill="none" role="img" aria-label="Civil Construction — Family Owned &amp; Operated">
+  <rect width="320" height="80" rx="4" fill="#1A1A1A" />
+  <g transform="translate(14, 20)">
+    <path
+      fill="#F5A623"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M2 7h14v32H2V7zm4 6h4v4H6v-4zm0 8h4v4H6v-4zm0 8h4v4H6v-4z
+         M18 0h14v39H18V0zm4 6h4v4h-4V6zm0 8h4v4h-4v-4zm0 8h4v4h-4v-4zm0 8h4v4h-4v-4z
+         M34 13h14v26H34V13zm4 6h4v4h-4v-4zm0 8h4v4h-4v-4z
+         M0 39h52v2H0v-2z"
+    />
+  </g>
+  <text
+    x="80"
+    y="35"
+    fill="#FFFFFF"
+    font-family="'Space Grotesk', 'Helvetica Neue', Arial, sans-serif"
+    font-size="22"
+    font-weight="700"
+    letter-spacing="0.4"
+  >CIVIL</text>
+  <text
+    x="80"
+    y="58"
+    fill="#F5A623"
+    font-family="'Space Grotesk', 'Helvetica Neue', Arial, sans-serif"
+    font-size="16"
+    font-weight="700"
+    letter-spacing="4.6"
+  >CONSTRUCTION</text>
+  <text
+    x="80"
+    y="72"
+    fill="#888888"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="8.2"
+    font-weight="400"
+    letter-spacing="0.2"
+  >Family Owned &amp; Operated</text>
+</svg>

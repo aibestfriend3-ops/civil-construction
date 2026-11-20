@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 41" fill="none" role="img" aria-label="Civil Construction Mark">
+  <!-- Three stepped buildings with transparent window cutouts + ground baseline -->
+  <path
+    fill="#F5A623"
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M2 7h14v32H2V7zm4 6h4v4H6v-4zm0 8h4v4H6v-4zm0 8h4v4H6v-4z
+       M18 0h14v39H18V0zm4 6h4v4h-4V6zm0 8h4v4h-4v-4zm0 8h4v4h-4v-4zm0 8h4v4h-4v-4z
+       M34 13h14v26H34V13zm4 6h4v4h-4v-4zm0 8h4v4h-4v-4z
+       M0 39h52v2H0v-2z"
+  />
+</svg>
