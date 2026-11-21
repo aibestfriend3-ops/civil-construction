@@ -1,6 +1,6 @@
 /**
- * Civil Construction — Family-Owned Sitework, Concrete & Utilities
- * Interactive client logic for services switcher, filterable local projects,
+ * Civil Construction Service (civilconstructionservice.com)
+ * Family-Owned Sitework, Concrete & Utilities — Interactive Client Logic
  * project detail modal, ballpark estimate calculator, and free quote form.
  */
 

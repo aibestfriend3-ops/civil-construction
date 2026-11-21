@@ -1,6 +1,6 @@
 /* ==========================================================================
-   CivilConstruction — Architectural Design System & Layout
-   Palette: Architectural Concrete, Deep Slate Iron, Structural Safety Ochre
+   Civil Construction Service — Architectural Design System & Layout
+   Palette: Architectural Concrete, Obsidian Charcoal, Brand Construction Gold
    Typography: Space Grotesk (Display), Inter (Body), IBM Plex Mono (Specs)
    ========================================================================== */
 
@@ -365,10 +365,11 @@ button {
 }
 
 .brand__construction {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.14em;
   color: var(--accent-ochre);
+  white-space: nowrap;
 }
 
 .site-header.is-scrolled .brand__construction {
@@ -387,7 +388,7 @@ button {
 
 .footer-logo {
   display: block;
-  width: min(260px, 100%);
+  width: min(300px, 100%);
   height: auto;
   margin-left: -0.65rem;
 }

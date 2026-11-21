@@ -1,5 +1,5 @@
 /**
- * Civil Construction — Lightweight Static & Active Inquiry API Server
+ * Civil Construction Service — Lightweight Static & Active Inquiry API Server
  * Zero external dependencies (Node.js 18+ / 24 LTS).
  * Serves website assets and handles validated POST /api/inquiries submissions
  * with License Agreement & Email Opt-In audit persistence.
@@ -270,16 +270,16 @@ function sendHtmlResponse(res, statusCode, title, heading, bodyHtml) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${escapeHtml(title)} — Civil Construction</title>
+  <title>${escapeHtml(title)} — Civil Construction Service</title>
   <link rel="stylesheet" href="/styles.css?v=4" />
 </head>
 <body style="min-height:100vh;display:grid;place-items:center;padding:2rem;background:var(--surface-canvas);">
   <main style="max-width:620px;width:100%;background:var(--surface-elevated);border:1px solid var(--rule-light);border-top:4px solid var(--accent-ochre);padding:2.25rem;box-shadow:var(--shadow-card);">
-    <img src="/assets/logo.svg" alt="Civil Construction" style="width:210px;height:auto;margin-bottom:1.5rem;" />
+    <img src="/assets/logo.svg" alt="Civil Construction Service" style="width:210px;height:auto;margin-bottom:1.5rem;" />
     <h1 style="font-family:var(--font-display);font-size:1.75rem;margin-bottom:0.75rem;">${escapeHtml(heading)}</h1>
     ${bodyHtml}
     <div style="margin-top:1.75rem;">
-      <a href="/#contact" class="btn btn--primary btn--sm">&larr; Back to Civil Construction</a>
+      <a href="/#contact" class="btn btn--primary btn--sm">&larr; Back to Civil Construction Service</a>
     </div>
   </main>
 </body>
@@ -305,7 +305,7 @@ const server = http.createServer(async (req, res) => {
     const count = readInquiries().length;
     sendJson(res, 200, {
       ok: true,
-      message: 'Civil Construction active inquiry endpoint. Submit requests via POST /api/inquiries.',
+      message: 'Civil Construction Service active inquiry endpoint. Submit requests via POST /api/inquiries.',
       inquiriesLogged: count,
     });
     return;
@@ -384,7 +384,7 @@ const server = http.createServer(async (req, res) => {
 
       if (htmlMode) {
         const optInLabel = record.consent.emailOptIn
-          ? 'Opted in to Civil Construction email updates'
+          ? 'Opted in to Civil Construction Service email updates'
           : 'Estimate reply only';
         sendHtmlResponse(
           res,
@@ -408,7 +408,7 @@ const server = http.createServer(async (req, res) => {
         referenceId,
         receivedAt: record.receivedAt,
         consent: record.consent,
-        message: 'Inquiry saved and routed to the Civil Construction owners.',
+        message: 'Inquiry saved and routed to the Civil Construction Service owners.',
       });
     } catch (err) {
       if (err && err.message === 'PAYLOAD_TOO_LARGE') {
@@ -434,5 +434,5 @@ const server = http.createServer(async (req, res) => {
 
 ensureDataStore();
 server.listen(PORT, HOST, () => {
-  console.log(`Civil Construction active server running on http://${HOST}:${PORT}`);
+  console.log(`Civil Construction Service active server running on http://${HOST}:${PORT}`);
 });

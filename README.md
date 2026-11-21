@@ -1,10 +1,10 @@
-# Civil Construction
+# Civil Construction Service (`civilconstructionservice.com`)
 
-A responsive, zero-dependency HTML5 / Vanilla CSS / Vanilla JavaScript website and active Node.js inquiry backend for **Civil Construction**, a small family-owned civil construction company.
+A responsive, zero-dependency HTML5 / Vanilla CSS / Vanilla JavaScript website and active Node.js inquiry backend for **Civil Construction Service**, a small family-owned civil construction company.
 
 ## Features
 
-- **Brand-Matched Design System (`styles.css`)** — Matched directly to the Civil Construction logo (`#1A1A1A` obsidian charcoal, `#F5A623` construction gold, and warm concrete neutrals) with crisp vector logo assets (`assets/logo-mark.svg`, `assets/logo.svg`).
+- **Brand-Matched Design System (`styles.css`)** — Matched directly to the Civil Construction Service logo (`#1A1A1A` obsidian charcoal, `#F5A623` construction gold, and warm concrete neutrals) with crisp vector logo assets (`assets/logo-mark.svg`, `assets/logo.svg`).
 - **Interactive Services Switcher (`#disciplines`)** — Covers *Site Prep & Excavation*, *Concrete & Foundations*, *Drainage & Utilities*, and *Driveways & Access Roads*.
 - **Filterable Local Project Gallery & Modal (`#projects`)** — Filter local residential, commercial, and township jobs by category and inspect project details.
 - **Ballpark Project Cost Calculator (`#estimator`)** — Instant ballpark range and duration calculator with one-click attachment into the quote form.
