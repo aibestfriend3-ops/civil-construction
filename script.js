@@ -1236,6 +1236,69 @@ function initQuoteForm() {
     if (submitBtn) submitBtn.disabled = true;
     if (submitLabel) submitLabel.textContent = 'Submitting Inquiry...';
 
+    const renderConfirmationReceipt = ({ refId, receivedAt, agreementVersion, staticFallback }) => {
+      const timestamp = receivedAt
+        ? new Date(receivedAt).toLocaleString('en-US', {
+            dateStyle: 'medium',
+            timeStyle: 'short',
+          })
+        : new Date().toLocaleString('en-US');
+      const optInStatus = payload.emailOptIn
+        ? 'OPTED IN (Email updates & estimate follow-ups authorized)'
+        : 'ESTIMATE REPLY ONLY (Not subscribed to seasonal updates)';
+
+      const mailSubject = encodeURIComponent(
+        `[${refId}] ${payload.sector} Estimate Request — ${payload.name}`
+      );
+      const mailBody = encodeURIComponent(
+        [
+          `Reference #: ${refId}`,
+          `Name: ${payload.name}`,
+          `Homeowner / Company: ${payload.organization || 'Residential / Local Property'}`,
+          `Phone: ${payload.phone}`,
+          `Email: ${payload.email}`,
+          `Service: ${payload.sector}`,
+          `Approximate Budget: ${payload.budget}`,
+          payload.estimateSummary ? `Attached Estimate: ${payload.estimateSummary}` : null,
+          `License Agreement: Accepted (Rev ${agreementVersion || '2026.1'})`,
+          `Email Opt-In: ${payload.emailOptIn ? 'YES — Opted in to email from Civil Construction Service' : 'No (Estimate reply only)'}`,
+          '',
+          'Project Location & Details:',
+          payload.notes,
+        ]
+          .filter((l) => l !== null)
+          .join('\n')
+      );
+
+      const fallbackCta = staticFallback
+        ? `<div style="margin-top:0.85rem;padding-top:0.85rem;border-top:1px solid var(--rule-light);">
+             <div style="margin-bottom:0.55rem;color:var(--ink-primary);">Static hosting detected — click below to send this formatted request straight to our inbox:</div>
+             <a href="mailto:hello@civilconstructionservice.com?subject=${mailSubject}&body=${mailBody}" class="btn btn--primary btn--sm">
+               Send Inquiry Email to hello@civilconstructionservice.com &rarr;
+             </a>
+           </div>`
+        : '';
+
+      confirmMeta.innerHTML =
+        [
+          `REFERENCE #: ${escapeHtml(refId)}`,
+          `LOGGED AT: ${escapeHtml(timestamp)}`,
+          `CONTACT: ${escapeHtml(payload.name)} (${escapeHtml(payload.organization || 'Residential / Local Property')})`,
+          `PHONE / EMAIL: ${escapeHtml(payload.phone)} &bull; ${escapeHtml(payload.email)}`,
+          `SERVICE: ${escapeHtml(payload.sector)} | APPROX. BUDGET: ${escapeHtml(payload.budget)}`,
+          `LICENSE AGREEMENT: ACCEPTED (Rev ${escapeHtml(agreementVersion || '2026.1')})`,
+          `EMAIL CONSENT: ${escapeHtml(optInStatus)}`,
+          payload.estimateSummary
+            ? `ESTIMATE ATTACHED: ${escapeHtml(payload.estimateSummary)}`
+            : null,
+        ]
+          .filter(Boolean)
+          .join('<br />') + fallbackCta;
+
+      formFieldsWrap.style.display = 'none';
+      confirmation.classList.add('is-visible');
+    };
+
     try {
       const response = await fetch(form.getAttribute('action') || '/api/inquiries', {
         method: 'POST',
@@ -1243,7 +1306,34 @@ function initQuoteForm() {
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json().catch(() => ({}));
+      const contentType = (response.headers.get('content-type') || '').toLowerCase();
+      const data = contentType.includes('application/json')
+        ? await response.json().catch(() => ({}))
+        : {};
+
+      // Pure static host (e.g., GitHub Pages) returns 404/405 HTML for /api/inquiries
+      if (response.status === 404 || response.status === 405) {
+        const localRef = `CC-${new Date().getFullYear()}-${String(Math.floor(1000 + Math.random() * 9000))}`;
+        const localRecord = {
+          referenceId: localRef,
+          receivedAt: new Date().toISOString(),
+          ...payload,
+        };
+        try {
+          const prev = JSON.parse(localStorage.getItem('ccs_inquiries') || '[]');
+          prev.push(localRecord);
+          localStorage.setItem('ccs_inquiries', JSON.stringify(prev));
+        } catch {
+          // ignore storage restrictions
+        }
+        renderConfirmationReceipt({
+          refId: localRef,
+          receivedAt: localRecord.receivedAt,
+          agreementVersion: '2026.1',
+          staticFallback: true,
+        });
+        return;
+      }
 
       if (!response.ok) {
         if (data.errors && typeof data.errors === 'object') {
@@ -1257,41 +1347,22 @@ function initQuoteForm() {
             }
           });
         }
-        showAlert(data.message || 'Could not submit your inquiry. Please check the form and try again.');
+        showAlert(
+          data.message ||
+            `Could not submit your inquiry (HTTP ${response.status}). Please try again or email hello@civilconstructionservice.com.`
+        );
         return;
       }
 
-      const refId = data.referenceId || `CC-${new Date().getFullYear()}-0001`;
-      const timestamp = data.receivedAt
-        ? new Date(data.receivedAt).toLocaleString('en-US', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          })
-        : new Date().toLocaleString('en-US');
-      const optInStatus = payload.emailOptIn
-        ? 'OPTED IN (Email updates & estimate follow-ups authorized)'
-        : 'ESTIMATE REPLY ONLY (Not subscribed to seasonal updates)';
-
-      confirmMeta.innerHTML = [
-        `REFERENCE #: ${escapeHtml(refId)}`,
-        `LOGGED AT: ${escapeHtml(timestamp)}`,
-        `CONTACT: ${escapeHtml(payload.name)} (${escapeHtml(payload.organization || 'Residential / Local Property')})`,
-        `PHONE / EMAIL: ${escapeHtml(payload.phone)} &bull; ${escapeHtml(payload.email)}`,
-        `SERVICE: ${escapeHtml(payload.sector)} | APPROX. BUDGET: ${escapeHtml(payload.budget)}`,
-        `LICENSE AGREEMENT: ACCEPTED (Rev ${escapeHtml(data.consent?.agreementVersion || '2026.1')})`,
-        `EMAIL CONSENT: ${escapeHtml(optInStatus)}`,
-        payload.estimateSummary
-          ? `ESTIMATE ATTACHED: ${escapeHtml(payload.estimateSummary)}`
-          : null,
-      ]
-        .filter(Boolean)
-        .join('<br />');
-
-      formFieldsWrap.style.display = 'none';
-      confirmation.classList.add('is-visible');
+      renderConfirmationReceipt({
+        refId: data.referenceId || `CC-${new Date().getFullYear()}-0001`,
+        receivedAt: data.receivedAt,
+        agreementVersion: data.consent?.agreementVersion || '2026.1',
+        staticFallback: false,
+      });
     } catch {
       showAlert(
-        'Could not reach our inquiry server right now. Please try again or call/text us directly at (555) 234-8910.'
+        'Could not reach our inquiry server right now. Please try again, email hello@civilconstructionservice.com, or call/text (555) 234-8910.'
       );
     } finally {
       if (submitBtn) submitBtn.disabled = false;

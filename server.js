@@ -10,7 +10,12 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
-const crypto = require('node:crypto');
+const {
+  parseSubmissionBody,
+  validateInquiry,
+  buildInquiryRecord,
+  forwardEmailIfConfigured,
+} = require('./lib/inquiry-validator');
 
 const PORT = Number(process.env.PORT) || 8080;
 const HOST = process.env.HOST || '127.0.0.1';
@@ -30,21 +35,6 @@ const MIME_TYPES = {
   '.webp': 'image/webp',
   '.ico': 'image/x-icon',
 };
-
-const VALID_SECTORS = new Set([
-  'Site & Grading',
-  'Concrete',
-  'Drainage & Utilities',
-  'Roads & Access',
-]);
-
-const VALID_BUDGETS = new Set([
-  'Under $15,000',
-  '$15,000 – $40,000',
-  '$40,000 – $100,000',
-  '$100,000+',
-  'Not sure yet',
-]);
 
 function ensureDataStore() {
   if (!fs.existsSync(DATA_DIR)) {
@@ -100,93 +90,21 @@ function readRequestBody(req, maxBytes = 64 * 1024) {
   });
 }
 
-function validateInquiry(body) {
-  const errors = {};
-  const clean = (val, maxLen = 500) =>
-    typeof val === 'string' ? val.trim().slice(0, maxLen) : '';
-
-  const name = clean(body.name, 120);
-  const organization = clean(body.organization, 140) || 'Residential / Local Property';
-  const email = clean(body.email, 160).toLowerCase();
-  const phone = clean(body.phone, 40);
-  const sector = clean(body.sector, 80);
-  const budget = clean(body.budget, 80);
-  const notes = clean(body.notes, 2000);
-  const estimateSummary = clean(body.estimateSummary, 400);
-  const honeypot = clean(body.website, 120);
-  const licenseAccepted = body.licenseAccepted === true;
-  const emailOptIn = body.emailOptIn === true;
-
-  if (honeypot) {
-    return { isBot: true, errors: {} };
-  }
-
-  if (name.length < 2) {
-    errors.name = 'Please enter your full name (at least 2 characters).';
-  }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-    errors.email = 'Please enter a valid email address.';
-  }
-
-  const digits = phone.replace(/\D/g, '');
-  if (digits.length < 10 || digits.length > 15) {
-    errors.phone = 'Please enter a valid phone number with at least 10 digits.';
-  }
-
-  if (!VALID_SECTORS.has(sector)) {
-    errors.sector = 'Please select one of our civil service categories.';
-  }
-
-  if (!VALID_BUDGETS.has(budget)) {
-    errors.budget = 'Please select an approximate project budget range.';
-  }
-
-  if (notes.length < 20) {
-    errors.notes = 'Please share at least 20 characters describing your location and project scope.';
-  }
-
-  if (!licenseAccepted) {
-    errors.licenseAccepted =
-      'You must review and accept the License Agreement & Terms before submitting.';
-  }
-
-  return {
-    isBot: false,
-    errors,
-    data: {
-      name,
-      organization,
-      email,
-      phone,
-      sector,
-      budget,
-      notes,
-      estimateSummary,
-      consent: {
-        licenseAccepted,
-        emailOptIn,
-        agreementVersion: '2026.1',
-        consentedAt: new Date().toISOString(),
-      },
-    },
-  };
-}
+const BLOCKED_ROOTS = new Set(['server.js', 'data', 'api', 'lib', 'netlify', 'netlify.toml']);
 
 function serveStatic(req, res, urlPath) {
   const safePath = urlPath === '/' ? 'index.html' : decodeURIComponent(urlPath).replace(/^[/\\]+/, '');
   const normalized = path.normalize(safePath).replace(/^(\.\.[/\\])+/, '');
   const filePath = path.resolve(ROOT_DIR, normalized);
   const relPath = path.relative(ROOT_DIR, filePath);
+  const segments = relPath.split(path.sep);
 
-  // Prevent escaping workspace root or reading server/data/dot files directly
+  // Prevent escaping workspace root or reading server/function/data/dot files directly
   if (
     relPath.startsWith('..') ||
     path.isAbsolute(relPath) ||
-    relPath === 'server.js' ||
-    relPath === 'data' ||
-    relPath.startsWith(`data${path.sep}`) ||
-    relPath.split(path.sep).some((seg) => seg.startsWith('.'))
+    BLOCKED_ROOTS.has(segments[0]) ||
+    segments.some((seg) => seg.startsWith('.'))
   ) {
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end('Forbidden');
@@ -220,43 +138,6 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-function parseBoolField(val) {
-  if (val === true) return true;
-  if (typeof val === 'string') {
-    const lower = val.trim().toLowerCase();
-    return lower === 'true' || lower === 'on' || lower === '1' || lower === 'yes';
-  }
-  return false;
-}
-
-function parseSubmissionBody(rawBody, contentType = '') {
-  const ct = String(contentType).toLowerCase();
-  const trimmed = String(rawBody || '').trim();
-
-  if (ct.includes('application/x-www-form-urlencoded') || (!ct.includes('application/json') && trimmed.includes('=') && !trimmed.startsWith('{'))) {
-    const params = new URLSearchParams(rawBody || '');
-    const obj = {};
-    for (const [key, value] of params.entries()) {
-      obj[key] = value;
-    }
-    obj.licenseAccepted = parseBoolField(obj.licenseAccepted);
-    obj.emailOptIn = parseBoolField(obj.emailOptIn);
-    return { ok: true, data: obj };
-  }
-
-  try {
-    const parsed = JSON.parse(trimmed || '{}');
-    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-      parsed.licenseAccepted = parseBoolField(parsed.licenseAccepted);
-      parsed.emailOptIn = parseBoolField(parsed.emailOptIn);
-      return { ok: true, data: parsed };
-    }
-    return { ok: false };
-  } catch {
-    return { ok: false };
-  }
-}
-
 function wantsHtmlResponse(req) {
   const accept = String(req.headers.accept || '').toLowerCase();
   const ct = String(req.headers['content-type'] || '').toLowerCase();
@@ -271,11 +152,11 @@ function sendHtmlResponse(res, statusCode, title, heading, bodyHtml) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${escapeHtml(title)} — Civil Construction Service</title>
-  <link rel="stylesheet" href="/styles.css?v=4" />
+  <link rel="stylesheet" href="/styles.css?v=5" />
 </head>
 <body style="min-height:100vh;display:grid;place-items:center;padding:2rem;background:var(--surface-canvas);">
   <main style="max-width:620px;width:100%;background:var(--surface-elevated);border:1px solid var(--rule-light);border-top:4px solid var(--accent-ochre);padding:2.25rem;box-shadow:var(--shadow-card);">
-    <img src="/assets/logo.svg" alt="Civil Construction Service" style="width:210px;height:auto;margin-bottom:1.5rem;" />
+    <img src="/assets/logo.svg" alt="Civil Construction Service" style="width:240px;height:auto;margin-bottom:1.5rem;" />
     <h1 style="font-family:var(--font-display);font-size:1.75rem;margin-bottom:0.75rem;">${escapeHtml(heading)}</h1>
     ${bodyHtml}
     <div style="margin-top:1.75rem;">
@@ -370,17 +251,11 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      const referenceId = `CC-${new Date().getFullYear()}-${crypto
-        .randomInt(1000, 9999)
-        .toString()}`;
-
-      const record = {
-        referenceId,
-        receivedAt: new Date().toISOString(),
-        ...result.data,
-      };
+      const record = buildInquiryRecord(result.data);
+      const { referenceId } = record;
 
       appendInquiry(record);
+      const delivery = await forwardEmailIfConfigured(record);
 
       if (htmlMode) {
         const optInLabel = record.consent.emailOptIn
@@ -408,6 +283,7 @@ const server = http.createServer(async (req, res) => {
         referenceId,
         receivedAt: record.receivedAt,
         consent: record.consent,
+        emailForwarded: delivery.forwarded,
         message: 'Inquiry saved and routed to the Civil Construction Service owners.',
       });
     } catch (err) {

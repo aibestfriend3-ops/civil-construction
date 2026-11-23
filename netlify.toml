@@ -1,0 +1,9 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/inquiries"
+  to = "/.netlify/functions/inquiries"
+  status = 200
+  force = true
