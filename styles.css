@@ -1738,6 +1738,10 @@ button {
   overflow: hidden;
 }
 
+.other-intent-field.is-hidden {
+  display: none;
+}
+
 /* License Agreement & Email Opt-In Consent Panel */
 .consent-box {
   margin-top: 1.5rem;

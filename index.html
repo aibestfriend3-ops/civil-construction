@@ -31,7 +31,7 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="styles.css?v=7" />
+    <link rel="stylesheet" href="styles.css?v=8" />
   </head>
   <body>
     <a class="sr-only" href="#main-content">Skip to main content</a>
@@ -948,6 +948,7 @@
                       <option value="Charity Program">Charity Program</option>
                       <option value="Investment Opportunity">Investment Opportunity</option>
                       <option value="General Inquiry">General Inquiry</option>
+                      <option value="Other">Other (Please specify)</option>
                     </select>
                     <span class="field__error">Please choose what you need help with.</span>
                   </div>
@@ -961,9 +962,27 @@
                       <option value="$40,000 – $100,000">$40,000 – $100,000</option>
                       <option value="$100,000+">$100,000+</option>
                       <option value="Not sure yet">Not sure yet — need advice</option>
-                      <option value="Not applicable">Not applicable (General / Charity)</option>
+                      <option value="Not applicable">Not applicable (General / Charity / Other)</option>
                     </select>
                     <span class="field__error">Please select a rough budget range.</span>
+                  </div>
+
+                  <div
+                    class="field field--full other-intent-field is-hidden"
+                    id="rfp-other-intent-wrap"
+                    data-field="otherIntent"
+                  >
+                    <label for="rfp-other-intent">Specify Your Intent *</label>
+                    <input
+                      type="text"
+                      id="rfp-other-intent"
+                      name="otherIntent"
+                      maxlength="120"
+                      placeholder="Briefly tell us what your inquiry is about (e.g., vendor supply, media, land sale)..."
+                    />
+                    <span class="field__error">
+                      Please specify your intent (at least 3 characters).
+                    </span>
                   </div>
 
                   <div class="field field--full" data-field="notes">
@@ -1312,6 +1331,6 @@
       </div>
     </div>
 
-    <script src="script.js?v=7" defer></script>
+    <script src="script.js?v=8" defer></script>
   </body>
 </html>

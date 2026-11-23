@@ -261,16 +261,20 @@ const server = http.createServer(async (req, res) => {
         const optInLabel = record.consent.emailOptIn
           ? 'Opted in to Civil Construction Service email updates'
           : 'Estimate reply only';
+        const topicDisplay =
+          record.sector === 'Other' && record.otherIntent
+            ? `Other — ${record.otherIntent}`
+            : record.sector;
         sendHtmlResponse(
           res,
           201,
           'Estimate Request Received',
           'Thank you — your inquiry is logged.',
-          `<p style="color:var(--ink-secondary);margin-bottom:1rem;">One of our owners will contact you within one business day to schedule your free site walk-through.</p>
+          `<p style="color:var(--ink-secondary);margin-bottom:1rem;">One of our owners will contact you within one business day to follow up.</p>
            <div class="form-confirmation__meta">
              REFERENCE #: ${escapeHtml(referenceId)}<br />
              CONTACT: ${escapeHtml(record.name)} (${escapeHtml(record.email)})<br />
-             SERVICE: ${escapeHtml(record.sector)} | BUDGET: ${escapeHtml(record.budget)}<br />
+             TOPIC / SERVICE: ${escapeHtml(topicDisplay)} | BUDGET: ${escapeHtml(record.budget)}<br />
              LICENSE AGREEMENT: Accepted (Rev ${escapeHtml(record.consent.agreementVersion)})<br />
              EMAIL CONSENT: ${escapeHtml(optInLabel)}
            </div>`

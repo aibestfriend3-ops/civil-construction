@@ -1160,6 +1160,9 @@ function initQuoteForm() {
   const criteriaText = document.getElementById('form-criteria-text');
   const licenseCheckbox = document.getElementById('rfp-license-agree');
   const emailOptInCheckbox = document.getElementById('rfp-email-optin');
+  const sectorSelect = document.getElementById('rfp-sector');
+  const otherIntentWrap = document.getElementById('rfp-other-intent-wrap');
+  const otherIntentInput = document.getElementById('rfp-other-intent');
 
   if (!form) return;
 
@@ -1174,6 +1177,21 @@ function initQuoteForm() {
     if (hiddenInput) hiddenInput.value = '';
   });
 
+  const getRequiredElements = () => Array.from(form.querySelectorAll('[required]'));
+
+  const syncOtherIntentField = (shouldFocus = false) => {
+    if (!sectorSelect || !otherIntentWrap || !otherIntentInput) return;
+    const isOther = sectorSelect.value === 'Other';
+    otherIntentWrap.classList.toggle('is-hidden', !isOther);
+    if (isOther) {
+      otherIntentInput.setAttribute('required', '');
+      if (shouldFocus) otherIntentInput.focus();
+    } else {
+      otherIntentInput.removeAttribute('required');
+      otherIntentWrap.classList.remove('has-error', 'is-valid');
+    }
+  };
+
   const checkCriterion = (input) => {
     if (!input) return true;
     if (input.type === 'checkbox') {
@@ -1186,6 +1204,9 @@ function initQuoteForm() {
     if (input.id === 'rfp-phone') {
       const digits = val.replace(/\D/g, '');
       return digits.length >= 10 && digits.length <= 15;
+    }
+    if (input.id === 'rfp-other-intent') {
+      return !input.hasAttribute('required') || val.length >= 3;
     }
     if (input.id === 'rfp-notes') return val.length >= 20;
     if (input.hasAttribute('required')) return Boolean(val);
@@ -1206,8 +1227,6 @@ function initQuoteForm() {
     return valid;
   };
 
-  const requiredElements = Array.from(form.querySelectorAll('[required]'));
-
   const updateNotesCounter = () => {
     if (!notesInput || !notesCounter) return;
     const len = notesInput.value.trim().length;
@@ -1218,8 +1237,9 @@ function initQuoteForm() {
 
   const updateCriteriaProgress = () => {
     if (!criteriaBar || !criteriaText) return;
-    const total = requiredElements.length;
-    const met = requiredElements.filter((el) => checkCriterion(el)).length;
+    const reqs = getRequiredElements();
+    const total = reqs.length;
+    const met = reqs.filter((el) => checkCriterion(el)).length;
     const ready = met === total;
     criteriaBar.classList.toggle('is-ready', ready);
     criteriaText.textContent = ready
@@ -1245,6 +1265,7 @@ function initQuoteForm() {
       updateCriteriaProgress();
     });
     el.addEventListener(evt, () => {
+      if (el === sectorSelect) syncOtherIntentField(true);
       if (el === notesInput) updateNotesCounter();
       const wrapper = el.closest('.field, .checkbox-field');
       if (wrapper?.classList.contains('has-error') || checkCriterion(el)) {
@@ -1255,15 +1276,17 @@ function initQuoteForm() {
     });
   });
 
+  syncOtherIntentField(false);
   updateNotesCounter();
   updateCriteriaProgress();
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     showAlert('');
+    syncOtherIntentField(false);
 
     let allValid = true;
-    requiredElements.forEach((input) => {
+    getRequiredElements().forEach((input) => {
       if (!validateField(input, true)) allValid = false;
     });
     updateCriteriaProgress();
@@ -1277,12 +1300,18 @@ function initQuoteForm() {
       return;
     }
 
+    const sectorVal = sectorSelect.value;
+    const otherIntentVal = sectorVal === 'Other' ? (otherIntentInput?.value.trim() || '') : '';
+    const topicDisplay =
+      sectorVal === 'Other' && otherIntentVal ? `Other — ${otherIntentVal}` : sectorVal;
+
     const payload = {
       name: document.getElementById('rfp-name').value.trim(),
       organization: document.getElementById('rfp-org').value.trim(),
       email: document.getElementById('rfp-email').value.trim(),
       phone: document.getElementById('rfp-phone').value.trim(),
-      sector: document.getElementById('rfp-sector').value,
+      sector: sectorVal,
+      otherIntent: otherIntentVal,
       budget: document.getElementById('rfp-budget').value,
       notes: document.getElementById('rfp-notes').value.trim(),
       estimateSummary: document.getElementById('rfp-estimate-summary').value,
@@ -1306,16 +1335,16 @@ function initQuoteForm() {
         : 'ESTIMATE REPLY ONLY (Not subscribed to seasonal updates)';
 
       const mailSubject = encodeURIComponent(
-        `[${refId}] ${payload.sector} Estimate Request — ${payload.name}`
+        `[${refId}] ${topicDisplay} Inquiry — ${payload.name}`
       );
       const mailBody = encodeURIComponent(
         [
           `Reference #: ${refId}`,
           `Name: ${payload.name}`,
-          `Homeowner / Company: ${payload.organization || 'Residential / Local Property'}`,
+          `Homeowner / Organization: ${payload.organization || 'Residential / Local Property'}`,
           `Phone: ${payload.phone}`,
           `Email: ${payload.email}`,
-          `Service: ${payload.sector}`,
+          `Topic / Service: ${topicDisplay}`,
           `Approximate Budget: ${payload.budget}`,
           payload.estimateSummary ? `Attached Estimate: ${payload.estimateSummary}` : null,
           `License Agreement: Accepted (Rev ${agreementVersion || '2026.1'})`,
@@ -1343,7 +1372,7 @@ function initQuoteForm() {
           `LOGGED AT: ${escapeHtml(timestamp)}`,
           `CONTACT: ${escapeHtml(payload.name)} (${escapeHtml(payload.organization || 'Residential / Local Property')})`,
           `PHONE / EMAIL: ${escapeHtml(payload.phone)} &bull; ${escapeHtml(payload.email)}`,
-          `SERVICE: ${escapeHtml(payload.sector)} | APPROX. BUDGET: ${escapeHtml(payload.budget)}`,
+          `TOPIC / SERVICE: ${escapeHtml(topicDisplay)} | APPROX. BUDGET: ${escapeHtml(payload.budget)}`,
           `LICENSE AGREEMENT: ACCEPTED (Rev ${escapeHtml(agreementVersion || '2026.1')})`,
           `EMAIL CONSENT: ${escapeHtml(optInStatus)}`,
           payload.estimateSummary
@@ -1435,6 +1464,7 @@ function initQuoteForm() {
     });
     document.getElementById('attached-estimate-pill')?.classList.remove('is-visible');
     document.getElementById('rfp-estimate-summary').value = '';
+    syncOtherIntentField(false);
     showAlert('');
     updateNotesCounter();
     updateCriteriaProgress();
