@@ -95,6 +95,29 @@ const SERVICES = {
     ],
     estimatorKey: 'roadways',
   },
+  charity: {
+    code: '05 / COMMUNITY & CHARITY PROGRAM',
+    title: 'Building Up Our Community — Family Charity Program',
+    image: 'assets/res-driveway.jpg',
+    imageAlt: 'Graded local access slope and community civil infrastructure work',
+    description:
+      'Each year, Civil Construction Service dedicates crew days, machine hours, and concrete materials to local nonprofits, schools, youth fields, churches, and neighboring families facing urgent access or drainage hardships.',
+    specs: [
+      { label: 'Annual Commitment', value: 'Dedicated Pro-Bono Crew Days' },
+      { label: 'Who Can Apply', value: '501(c)(3)s, Schools & Local Families' },
+      { label: 'Typical Support', value: 'ADA Ramps, Grading & Drainage Fixes' },
+      { label: 'Review Process', value: 'Direct Family Review Within 5 Days' },
+    ],
+    deliverables: [
+      'ADA concrete wheelchair ramps & safe entry walks',
+      'Youth ballfield, park & community garden grading',
+      'Nonprofit & church parking lot / culvert repairs',
+      'Emergency storm-washout relief for senior neighbors',
+    ],
+    prefillSector: 'Charity Program',
+    prefillBudget: 'Not applicable',
+    ctaLabel: 'Nominate a Charity or Community Project',
+  },
 };
 
 const RESIDENTIAL_PROJECTS = [
@@ -685,6 +708,23 @@ function initMetricsCounters() {
    Interactive Services Ledger
    ========================================================================== */
 
+function prefillContactInquiry(sector, budget) {
+  const sectorSelect = document.getElementById('rfp-sector');
+  const budgetSelect = document.getElementById('rfp-budget');
+
+  if (sectorSelect && sector) {
+    sectorSelect.value = sector;
+    sectorSelect.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  if (budgetSelect && budget) {
+    budgetSelect.value = budget;
+    budgetSelect.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('rfp-name')?.focus({ preventScroll: true });
+}
+
 function initServices() {
   const tabs = document.querySelectorAll('.discipline-tab');
   const panelImage = document.getElementById('discipline-image');
@@ -694,6 +734,14 @@ function initServices() {
   const panelSpecs = document.getElementById('discipline-specs');
   const panelDeliverables = document.getElementById('discipline-deliverables');
   const panelEstimateBtn = document.getElementById('discipline-estimate-btn');
+
+  // Wire community, investment, charity, and footer quick-prefill triggers
+  document.querySelectorAll('[data-prefill-sector]').forEach((el) => {
+    el.addEventListener('click', (event) => {
+      event.preventDefault();
+      prefillContactInquiry(el.dataset.prefillSector, el.dataset.prefillBudget || '');
+    });
+  });
 
   if (!tabs.length || !panelTitle) return;
 
@@ -728,6 +776,11 @@ function initServices() {
       .join('');
 
     panelDeliverables.innerHTML = data.deliverables.map((item) => `<li>${item}</li>`).join('');
+
+    if (panelEstimateBtn) {
+      const label = data.ctaLabel || 'Estimate This Service';
+      panelEstimateBtn.innerHTML = `${label} <span class="btn__arrow" aria-hidden="true">&rarr;</span>`;
+    }
   };
 
   tabs.forEach((tab) => {
@@ -736,7 +789,12 @@ function initServices() {
 
   if (panelEstimateBtn) {
     panelEstimateBtn.addEventListener('click', () => {
-      const estKey = SERVICES[activeServiceKey]?.estimatorKey || 'excavation';
+      const active = SERVICES[activeServiceKey];
+      if (active?.prefillSector) {
+        prefillContactInquiry(active.prefillSector, active.prefillBudget || '');
+        return;
+      }
+      const estKey = active?.estimatorKey || 'excavation';
       const targetBtn = document.querySelector(`[data-est-type="${estKey}"]`);
       if (targetBtn) targetBtn.click();
       document.getElementById('estimator')?.scrollIntoView({ behavior: 'smooth' });

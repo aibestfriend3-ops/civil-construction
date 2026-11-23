@@ -1500,6 +1500,100 @@ button {
   margin-top: 0.25rem;
 }
 
+/* Community, Charity Program & Partnerships Band */
+.outreach-block {
+  margin-top: clamp(3rem, 5vw, 4.5rem);
+  padding-top: clamp(2.5rem, 4vw, 3.5rem);
+  border-top: 1px solid var(--rule-light);
+}
+
+.outreach-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem 2rem;
+  margin-bottom: 2rem;
+}
+
+.outreach-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.outreach-card {
+  background-color: var(--surface-elevated);
+  border: 1px solid var(--rule-light);
+  border-top: 3px solid var(--ink-primary);
+  border-radius: var(--radius-sm);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transition:
+    transform var(--duration-med) var(--ease-structural),
+    box-shadow var(--duration-med) var(--ease-structural);
+}
+
+.outreach-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card);
+}
+
+.outreach-card--charity {
+  border-top-color: var(--accent-ochre);
+}
+
+.outreach-card__tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent-ochre-text);
+}
+
+.outreach-card__title {
+  font-family: var(--font-display);
+  font-size: 1.32rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink-primary);
+}
+
+.outreach-card__desc {
+  font-size: 0.93rem;
+  line-height: 1.6;
+  color: var(--ink-secondary);
+  flex: 1;
+}
+
+.outreach-card__link {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-light);
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink-primary);
+  transition: color var(--duration-fast);
+}
+
+.outreach-card__link:hover {
+  color: var(--accent-ochre-text);
+}
+
+@media (max-width: 960px) {
+  .outreach-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ==========================================================================
    RFP / Request a Bid Contact Section
    ========================================================================== */

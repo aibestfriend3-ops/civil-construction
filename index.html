@@ -31,7 +31,7 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="styles.css?v=5" />
+    <link rel="stylesheet" href="styles.css?v=7" />
   </head>
   <body>
     <a class="sr-only" href="#main-content">Skip to main content</a>
@@ -67,8 +67,8 @@
             <li><a href="#disciplines" id="nav-disciplines">Services</a></li>
             <li><a href="#projects" id="nav-projects">Our Work</a></li>
             <li><a href="#estimator" id="nav-estimator">Cost Calculator</a></li>
-            <li><a href="#delivery" id="nav-delivery">Our Family</a></li>
-            <li><a href="#contact" id="nav-contact">Free Quote</a></li>
+            <li><a href="#delivery" id="nav-delivery">Community &amp; Partners</a></li>
+            <li><a href="#contact" id="nav-contact">Contact</a></li>
           </ul>
         </nav>
 
@@ -213,7 +213,7 @@
                 </div>
                 <div class="hero__spec-row">
                   <dt>Who We Serve</dt>
-                  <dd>Homes, Farms &amp; Local Business</dd>
+                  <dd>Homes, Industry &amp; Local Charities</dd>
                 </div>
               </dl>
             </aside>
@@ -332,6 +332,22 @@
                 <span>
                   <span class="discipline-tab__title">Driveways &amp; Access Roads</span>
                   <span class="discipline-tab__sub">Gravel &amp; asphalt drives, rural roads &amp; small lots</span>
+                </span>
+                <span class="discipline-tab__chevron" aria-hidden="true">&rarr;</span>
+              </button>
+
+              <button
+                type="button"
+                class="discipline-tab"
+                role="tab"
+                aria-selected="false"
+                data-discipline="charity"
+                id="discipline-tab-charity"
+              >
+                <span class="discipline-tab__num">05</span>
+                <span>
+                  <span class="discipline-tab__title">Charity Program</span>
+                  <span class="discipline-tab__sub">Pro-bono sitework, ADA ramps, schools &amp; local nonprofits</span>
                 </span>
                 <span class="discipline-tab__chevron" aria-hidden="true">&rarr;</span>
               </button>
@@ -722,11 +738,86 @@
               </div>
             </div>
           </div>
+          <div class="outreach-block reveal" id="community">
+            <div class="outreach-header">
+              <div>
+                <span class="eyebrow" style="margin-bottom: 0.65rem">Beyond Project Quotes</span>
+                <h3
+                  class="section-heading"
+                  style="font-size: clamp(1.5rem, 2.5vw, 2.15rem)"
+                >
+                  Community giving, partnerships &amp; open doors.
+                </h3>
+              </div>
+              <p class="section-lead" style="max-width: 48ch">
+                Building locally means investing back in our neighbors. Reach our family directly
+                for charity nominations, co-investment inquiries, or general questions.
+              </p>
+            </div>
+
+            <div class="outreach-grid">
+              <article class="outreach-card outreach-card--charity">
+                <span class="outreach-card__tag">CHARITY PROGRAM</span>
+                <h4 class="outreach-card__title">Community Giving &amp; Pro-Bono Sitework</h4>
+                <p class="outreach-card__desc">
+                  Each year we donate machine hours, crew days, and concrete for local food banks,
+                  churches, youth fields, ADA ramps, and neighbors facing urgent storm washouts.
+                </p>
+                <button
+                  type="button"
+                  class="outreach-card__link"
+                  id="outreach-charity-btn"
+                  data-prefill-sector="Charity Program"
+                  data-prefill-budget="Not applicable"
+                >
+                  <span>Nominate a Charity Project</span>
+                  <span aria-hidden="true">&rarr;</span>
+                </button>
+              </article>
+
+              <article class="outreach-card">
+                <span class="outreach-card__tag">INVESTMENT OPPORTUNITY</span>
+                <h4 class="outreach-card__title">Land &amp; Industrial Co-Development</h4>
+                <p class="outreach-card__desc">
+                  We partner selectively with regional landowners, builders, and investors on
+                  industrial pad build-outs, shovel-ready commercial parcels, and fleet expansion.
+                </p>
+                <button
+                  type="button"
+                  class="outreach-card__link"
+                  id="outreach-invest-btn"
+                  data-prefill-sector="Investment Opportunity"
+                >
+                  <span>Discuss an Investment</span>
+                  <span aria-hidden="true">&rarr;</span>
+                </button>
+              </article>
+
+              <article class="outreach-card">
+                <span class="outreach-card__tag">GENERAL INQUIRY</span>
+                <h4 class="outreach-card__title">Questions, Trade Teaming &amp; Careers</h4>
+                <p class="outreach-card__desc">
+                  Need advice on drainage or county permits, looking to team up as a local trade
+                  partner, or interested in joining our family crew? Drop us a note anytime.
+                </p>
+                <button
+                  type="button"
+                  class="outreach-card__link"
+                  id="outreach-general-btn"
+                  data-prefill-sector="General Inquiry"
+                  data-prefill-budget="Not applicable"
+                >
+                  <span>Send a General Inquiry</span>
+                  <span aria-hidden="true">&rarr;</span>
+                </button>
+              </article>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- ====================================================================
-           Free Quote / On-Site Walk-Through Form
+           Free Quote, Partnership & Community Inquiry Form
            ==================================================================== -->
       <section class="section section--mortar" id="contact">
         <div class="container">
@@ -734,12 +825,12 @@
             <div>
               <span class="eyebrow" style="margin-bottom: 0.9rem">05 / Get In Touch</span>
               <h2 class="section-heading" style="margin-bottom: 1.25rem">
-                Let’s walk your site and put together a free quote.
+                Start a project quote, partnership, or community request.
               </h2>
               <p class="section-lead">
-                Tell us a bit about your property and what you have in mind. We’re usually out on a
-                machine during the day, so we return every call and message by the next business
-                morning.
+                Whether you’re pricing sitework, exploring an investment opportunity, nominating a
+                charity project, or asking a general question—our family reviews every message and
+                replies within one business day.
               </p>
 
               <div class="office-list">
@@ -762,10 +853,11 @@
                   </p>
                 </div>
                 <div>
-                  <h3 class="office-card__title">Working With Local Home Builders</h3>
+                  <h3 class="office-card__title">Builders, Partners &amp; Community Giving</h3>
                   <p class="office-card__detail">
-                    Custom home builders, framers, and farm owners—send over your plot plan or
-                    foundation drawing anytime for a quick turnaround quote.
+                    Custom builders, industrial developers, investment partners, and local
+                    nonprofits—select your topic on the form and we’ll route it straight to the
+                    owners.
                   </p>
                 </div>
               </div>
@@ -809,12 +901,12 @@
                   </div>
 
                   <div class="field" data-field="organization">
-                    <label for="rfp-org">Homeowner / Company (Optional)</label>
+                    <label for="rfp-org">Homeowner / Organization (Optional)</label>
                     <input
                       type="text"
                       id="rfp-org"
                       name="organization"
-                      placeholder="Homeowner, Farm, or Builder"
+                      placeholder="Homeowner, Business, Investor, or Nonprofit"
                       autocomplete="organization"
                     />
                   </div>
@@ -853,9 +945,9 @@
                       <option value="Concrete">Concrete, Foundations &amp; Slabs</option>
                       <option value="Drainage &amp; Utilities">Drainage, Culverts &amp; Utilities</option>
                       <option value="Roads &amp; Access">Driveways &amp; Private Roads</option>
-                      <option value="General Inquiry">General Inquiry</option>
+                      <option value="Charity Program">Charity Program</option>
                       <option value="Investment Opportunity">Investment Opportunity</option>
-                      <option value="Charity">Charity</option>
+                      <option value="General Inquiry">General Inquiry</option>
                     </select>
                     <span class="field__error">Please choose what you need help with.</span>
                   </div>
@@ -1021,16 +1113,35 @@
               <li><a href="#disciplines">Concrete &amp; Foundations</a></li>
               <li><a href="#disciplines">Drainage &amp; Utilities</a></li>
               <li><a href="#disciplines">Driveways &amp; Private Roads</a></li>
+              <li>
+                <a
+                  href="#contact"
+                  data-prefill-sector="Charity Program"
+                  data-prefill-budget="Not applicable"
+                  >Charity Program</a
+                >
+              </li>
             </ul>
           </div>
 
           <div>
-            <h3 class="footer-heading">Quick Links</h3>
+            <h3 class="footer-heading">Connect</h3>
             <ul class="footer-links">
-              <li><a href="#projects">Recent Local Work</a></li>
+              <li><a href="#projects">Completed Projects (39)</a></li>
               <li><a href="#estimator">Ballpark Cost Calculator</a></li>
-              <li><a href="#delivery">Our Family Story</a></li>
-              <li><a href="#contact">Free On-Site Quote</a></li>
+              <li>
+                <a href="#contact" data-prefill-sector="Investment Opportunity"
+                  >Investment Opportunities</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  data-prefill-sector="General Inquiry"
+                  data-prefill-budget="Not applicable"
+                  >General Inquiries</a
+                >
+              </li>
             </ul>
           </div>
 
@@ -1201,6 +1312,6 @@
       </div>
     </div>
 
-    <script src="script.js?v=6" defer></script>
+    <script src="script.js?v=7" defer></script>
   </body>
 </html>
