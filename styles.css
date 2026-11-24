@@ -1189,6 +1189,10 @@ button {
   border-left: 3px solid var(--on-dark-secondary);
 }
 
+.project-card__sector--crypto {
+  border-left: 3px solid var(--accent-blueprint);
+}
+
 .portfolio-actions {
   margin-top: 2.5rem;
   display: flex;

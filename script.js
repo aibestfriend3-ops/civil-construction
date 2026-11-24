@@ -456,11 +456,112 @@ const INDUSTRIAL_PROJECTS = INDUSTRIAL_SPECS.map((spec, idx) => {
   };
 });
 
-// Interleave residential (12) and industrial (27) projects cleanly for the "All" view
+const CRYPTO_PROJECTS = [
+  {
+    id: 'cry-01-cascade-mining-pad',
+    title: 'Cascade Hydro-Cooled Mining Pad & Substation Slab',
+    category: 'crypto',
+    categoryLabel: 'Crypto Infrastructure',
+    serviceSector: 'Crypto Infrastructure',
+    location: 'Eastgate Power Corridor',
+    year: '2026',
+    client: 'Cascade Digital Compute LLC',
+    value: '$245,000',
+    duration: '5 Weeks',
+    volume: '14,000 sq ft',
+    safety: '5 MW Pad Certified',
+    image: 'assets/project-concrete.jpg',
+    imageAlt: 'Heavy reinforced concrete equipment pad and paved access for modular crypto mining containers',
+    summary:
+      'Poured 10-inch fiber-and-rebar reinforced concrete slabs for eight hydro-cooled mining containers, two medium-voltage transformer vault footings, and perimeter security curbwork.',
+    highlights: [
+      'Engineered continuous concrete transformer pads with oil-containment curbing and embedded grounding lugs.',
+      'Laser-leveled container pads to 1/4-inch tolerance for direct crane placement of 40-foot mining pods.',
+      'Accepted milestone settlement via USD wire and verified USDC under formal commercial contract.',
+    ],
+  },
+  {
+    id: 'cry-02-northbend-conduit-yard',
+    title: 'Northbend Compute Container Yard & High-Voltage Duct Banks',
+    category: 'crypto',
+    categoryLabel: 'Crypto Infrastructure',
+    serviceSector: 'Crypto Infrastructure',
+    location: 'Northbend Utility Spur',
+    year: '2025',
+    client: 'Northbend Hash & Hosting',
+    value: '$192,000',
+    duration: '4 Weeks',
+    volume: '2,100 Linear Ft',
+    safety: 'Utility Co-op Signed Off',
+    image: 'assets/project-excavation.jpg',
+    imageAlt: 'Excavated utility yard and compacted gravel staging pad for high-density compute containers',
+    summary:
+      'Graded a 2.6-acre compacted crushed-rock container yard and installed 2,100 linear feet of concrete-encased power conduit banks, dual fiber pathways, and copper grounding grids.',
+    highlights: [
+      'Maintained strict thermal backfill compaction specs across all parallel medium-voltage duct trenches.',
+      'Installed perimeter stormwater swales and 6-inch crushed granite surfacing rated for 40-ton cranes.',
+      'Delivered turnkey civil handoff 6 days ahead of utility substation energization.',
+    ],
+  },
+  {
+    id: 'cry-03-mill-creek-cooling',
+    title: 'Mill Creek Immersion-Cooling Water Loop & Retention Basin',
+    category: 'crypto',
+    categoryLabel: 'Crypto Infrastructure',
+    serviceSector: 'Crypto Infrastructure',
+    location: 'Mill Creek Industrial',
+    year: '2025',
+    client: 'Pacific Node Infrastructure',
+    value: '$178,000',
+    duration: '5 Weeks',
+    volume: '360 cu yd Concrete',
+    safety: 'Zero-Leak Hydro Test',
+    image: 'assets/project-drainage.jpg',
+    imageAlt: 'Reinforced concrete cooling water retention basin and steel service walkway for compute facility',
+    summary:
+      'Constructed a cast-in-place cooling water retention basin, dry-cooler foundation piers, pump house slab, and frost-depth closed-loop piping trenches for an immersion-cooled mining site.',
+    highlights: [
+      'Poured watertight environmental concrete walls with PVC waterstops passing 48-hour hydrostatic testing.',
+      'Trenched insulated HDPE supply and return headers beneath active yard haul lanes.',
+      'Coordinated civil foundation tolerances directly with mechanical cooling-tower engineers.',
+    ],
+  },
+  {
+    id: 'cry-04-ridgeway-modular-access',
+    title: 'Ridgeway Modular Data Center Access Road & Switchgear Pads',
+    category: 'crypto',
+    categoryLabel: 'Crypto Infrastructure',
+    serviceSector: 'Crypto Infrastructure',
+    location: 'Ridgeway Energy Park',
+    year: '2024',
+    client: 'Ridgeway Digital Infrastructure',
+    value: '$156,000',
+    duration: '4 Weeks',
+    volume: '1,350 Linear Ft',
+    safety: '80-Ton Axle Rated',
+    image: 'assets/project-roadway.jpg',
+    imageAlt: 'Heavy-duty paved access road and graded embankments serving a modular data center',
+    summary:
+      'Built a heavy-axle access corridor engineered for 80-ton mobile transformer deliveries, poured reinforced switchgear pads, and shaped landscaped acoustic earth berms along the property line.',
+    highlights: [
+      'Stabilized subgrade with woven geotextile and 10 inches of compacted aggregate under heavy asphalt.',
+      'Shaped 12-foot vegetated acoustic earth berms reducing ambient fan noise at the road edge by 14 dB.',
+      'Completed zero-incident civil package for a joint-venture digital infrastructure investor group.',
+    ],
+  },
+];
+
+// Interleave residential (12), industrial (27), and crypto infrastructure (4) cleanly for the "All" view
 const PROJECTS = [];
-for (let i = 0; i < Math.max(RESIDENTIAL_PROJECTS.length, INDUSTRIAL_PROJECTS.length); i += 1) {
+const maxLen = Math.max(
+  RESIDENTIAL_PROJECTS.length,
+  INDUSTRIAL_PROJECTS.length,
+  CRYPTO_PROJECTS.length
+);
+for (let i = 0; i < maxLen; i += 1) {
   if (RESIDENTIAL_PROJECTS[i]) PROJECTS.push(RESIDENTIAL_PROJECTS[i]);
   if (INDUSTRIAL_PROJECTS[i]) PROJECTS.push(INDUSTRIAL_PROJECTS[i]);
+  if (CRYPTO_PROJECTS[i]) PROJECTS.push(CRYPTO_PROJECTS[i]);
 }
 
 /* Realistic Ballpark Unit Rates for a Small Family-Owned Civil Contractor */
@@ -827,6 +928,7 @@ function initPortfolio() {
   const getFilteredProjects = () => {
     if (activeFilter === 'residential') return RESIDENTIAL_PROJECTS;
     if (activeFilter === 'industrial') return INDUSTRIAL_PROJECTS;
+    if (activeFilter === 'crypto') return CRYPTO_PROJECTS;
     return PROJECTS;
   };
 
@@ -893,7 +995,9 @@ function initPortfolio() {
           ? 'RESIDENTIAL PROJECTS'
           : activeFilter === 'industrial'
             ? 'INDUSTRIAL PROJECTS'
-            : 'COMPLETED PROJECTS';
+            : activeFilter === 'crypto'
+              ? 'CRYPTO INFRASTRUCTURE PROJECTS'
+              : 'COMPLETED PROJECTS';
       countEl.textContent = `SHOWING ${slice.length} OF ${matching.length} ${label}`;
     }
 

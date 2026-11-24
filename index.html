@@ -31,7 +31,7 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="styles.css?v=8" />
+    <link rel="stylesheet" href="styles.css?v=9" />
   </head>
   <body>
     <a class="sr-only" href="#main-content">Skip to main content</a>
@@ -238,9 +238,9 @@
               </div>
               <div class="metric-cell">
                 <div class="metric-cell__value">
-                  <span data-count-target="28">28</span><span class="metric-cell__unit">YR</span>
+                  <span data-count-target="4">4</span>
                 </div>
-                <div class="metric-cell__label">Family-Owned &amp; Operated</div>
+                <div class="metric-cell__label">Crypto Infrastructure Sites</div>
               </div>
               <div class="metric-cell">
                 <div class="metric-cell__value">
@@ -392,19 +392,21 @@
           <div class="section-header reveal">
             <div class="section-header__left">
               <span class="eyebrow">02 / Completed Portfolio</span>
-              <h2 class="section-heading">12 Residential &amp; 27 Industrial projects completed.</h2>
+              <h2 class="section-heading">
+                12 Residential, 27 Industrial &amp; 4 Crypto Infrastructure projects.
+              </h2>
             </div>
             <p class="section-lead">
               Every job in our archive was completed directly by our family crew—from custom home
-              foundations and driveways to heavy industrial shop pads, drainage basins, and plant
-              access roads.
+              foundations and driveways to industrial shop pads, modular crypto-mining slabs,
+              substation duct banks, and cooling basins.
             </p>
           </div>
 
           <div class="filter-bar reveal">
             <div class="filter-group" role="group" aria-label="Filter completed projects by category">
               <button type="button" class="filter-btn is-active" data-filter="all" id="filter-all">
-                All Projects (39)
+                All Projects (43)
               </button>
               <button
                 type="button"
@@ -422,8 +424,16 @@
               >
                 Industrial (27)
               </button>
+              <button
+                type="button"
+                class="filter-btn"
+                data-filter="crypto"
+                id="filter-crypto"
+              >
+                Crypto Infrastructure (4)
+              </button>
             </div>
-            <div class="portfolio-count" id="portfolio-count">SHOWING 6 OF 39 COMPLETED PROJECTS</div>
+            <div class="portfolio-count" id="portfolio-count">SHOWING 6 OF 43 COMPLETED PROJECTS</div>
           </div>
 
           <div class="projects-grid reveal" id="projects-grid"></div>
@@ -776,11 +786,12 @@
               </article>
 
               <article class="outreach-card">
-                <span class="outreach-card__tag">INVESTMENT OPPORTUNITY</span>
-                <h4 class="outreach-card__title">Land &amp; Industrial Co-Development</h4>
+                <span class="outreach-card__tag">INVESTMENT &amp; CRYPTO PARTNERSHIPS</span>
+                <h4 class="outreach-card__title">Land, Industrial &amp; Digital-Asset Co-Development</h4>
                 <p class="outreach-card__desc">
-                  We partner selectively with regional landowners, builders, and investors on
-                  industrial pad build-outs, shovel-ready commercial parcels, and fleet expansion.
+                  We partner selectively with regional landowners, builders, and crypto
+                  infrastructure investors on industrial pads, modular mining sites, and
+                  treasury-backed build-outs—with USD, BTC, ETH &amp; USDC settlement options.
                 </p>
                 <button
                   type="button"
@@ -788,7 +799,7 @@
                   id="outreach-invest-btn"
                   data-prefill-sector="Investment Opportunity"
                 >
-                  <span>Discuss an Investment</span>
+                  <span>Discuss an Investment or Crypto Deal</span>
                   <span aria-hidden="true">&rarr;</span>
                 </button>
               </article>
@@ -828,9 +839,9 @@
                 Start a project quote, partnership, or community request.
               </h2>
               <p class="section-lead">
-                Whether you’re pricing sitework, exploring an investment opportunity, nominating a
-                charity project, or asking a general question—our family reviews every message and
-                replies within one business day.
+                Whether you’re pricing sitework, building a crypto compute site, exploring an
+                investment opportunity, nominating a charity project, or asking a general
+                question—our family reviews every message and replies within one business day.
               </p>
 
               <div class="office-list">
@@ -853,11 +864,14 @@
                   </p>
                 </div>
                 <div>
-                  <h3 class="office-card__title">Builders, Partners &amp; Community Giving</h3>
+                  <h3 class="office-card__title">Crypto &amp; Commercial Payment Options</h3>
                   <p class="office-card__detail">
-                    Custom builders, industrial developers, investment partners, and local
-                    nonprofits—select your topic on the form and we’ll route it straight to the
-                    owners.
+                    We accept standard check, ACH, and wire transfers, plus verified BTC, ETH, and
+                    USDC milestone settlements for qualified industrial, crypto-infrastructure, and
+                    co-investment contracts.
+                  </p>
+                  <p class="office-card__mono">
+                    SETTLEMENT: USD WIRE / ACH &bull; BTC / ETH / USDC AVAILABLE
                   </p>
                 </div>
               </div>
@@ -945,6 +959,7 @@
                       <option value="Concrete">Concrete, Foundations &amp; Slabs</option>
                       <option value="Drainage &amp; Utilities">Drainage, Culverts &amp; Utilities</option>
                       <option value="Roads &amp; Access">Driveways &amp; Private Roads</option>
+                      <option value="Crypto Infrastructure">Crypto Infrastructure &amp; Sitework</option>
                       <option value="Charity Program">Charity Program</option>
                       <option value="Investment Opportunity">Investment Opportunity</option>
                       <option value="General Inquiry">General Inquiry</option>
@@ -1146,11 +1161,15 @@
           <div>
             <h3 class="footer-heading">Connect</h3>
             <ul class="footer-links">
-              <li><a href="#projects">Completed Projects (39)</a></li>
-              <li><a href="#estimator">Ballpark Cost Calculator</a></li>
+              <li><a href="#projects">Completed Projects (43)</a></li>
+              <li>
+                <a href="#contact" data-prefill-sector="Crypto Infrastructure"
+                  >Crypto Infrastructure</a
+                >
+              </li>
               <li>
                 <a href="#contact" data-prefill-sector="Investment Opportunity"
-                  >Investment Opportunities</a
+                  >Investment &amp; Crypto Deals</a
                 >
               </li>
               <li>
@@ -1331,6 +1350,6 @@
       </div>
     </div>
 
-    <script src="script.js?v=8" defer></script>
+    <script src="script.js?v=9" defer></script>
   </body>
 </html>
